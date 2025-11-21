@@ -1,37 +1,37 @@
 {
-  "name": "solnce摸鱼项目-icon",
-  "description": "solnce",
+  "name": "icon",
+  "description": "test",
   "icons": [
     {
       "name": "linkcube_ly",
-      "url": "https://v6.gh-proxy.com/https://github.com/OneQ1st/icon/blob/main/linkcube.png"
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/blob/main/linkcube.png"
     },
     {
       "name": "wumao_wm",
-      "url": "https://v6.gh-proxy.com/https://github.com/OneQ1st/icon/blob/main/wumao.png"
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/blob/main/wumao.png"
     },
     {
       "name": "linkcube_ly",
-      "url": "https://github.com/OneQ1st/icon/blob/main/nezhayun.png"
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/blob/main/nezhayun.png"
     },
     {
       "name": "linkcube_ly",
-      "url": "https://github.com/OneQ1st/icon/blob/main/ikuuu.png"
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/blob/main/ikuuu.png"
     },
     {
       "name": "nanocloud",
-      "url": "https://v6.gh-proxy.com/https://github.com/OneQ1st/icon/blob/main/NanoCloud.png"
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/blob/main/NanoCloud.png"
     },
     {
       "name": "facmata",
-      "url": "https://v6.gh-proxy.com/https://github.com/OneQ1st/icon/blob/main/FacMata.png"
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/blob/main/FacMata.png"
     },
     {
       "name": "dlercloud",
-      "url": "https://v6.gh-proxy.com/https://github.com/OneQ1st/icon/blob/main/DlerCloud.png"
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/blob/main/DlerCloud.png"
     },
     {
       "name": "alphaio",
-      "url": "https://v6.gh-proxy.com/https://github.com/OneQ1st/icon/blob/main/AIphaio.png"
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/blob/main/AIphaio.png"
     }
     ]
