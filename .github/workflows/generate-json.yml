@@ -22,22 +22,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install ImageMagick
-        run: sudo apt-get update && sudo apt-get install -y imagemagick
+      - name: Install dependencies (ImageMagick + jq)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick jq
 
       - name: Generate resized PNGs and icon.json
-        shell: bash  # 关键：强制使用 bash
+        shell: bash
         run: |
+          set -euo pipefail  # 安全模式，推荐加上
+
           REPO="${{ github.repository }}"
           mkdir -p resized
           echo "[]" > tmp.json
 
-          # 定义要生成的尺寸
+          # 要生成的尺寸
           SIZES=(16 32 64 128 256 512)
 
           shopt -s nullglob
 
-          # 处理位图格式（png/jpg/jpeg/webp/gif）
+          # 处理位图（支持 resize）
           for file in *.{png,jpg,jpeg,webp,gif}; do
             [[ -f "$file" ]] || continue
             [[ "$file" == "icon.json" ]] && continue
@@ -48,14 +52,22 @@ jobs:
 
             original_url="https://raw.githubusercontent.com/$REPO/main/$file"
 
-            # 添加原始文件条目
+            # 添加原始文件
             jq --arg n "$name" --arg u "\( original_url" --arg s "original" --arg t " \){file##*.}" \
               '. += [{"name": $n, "url": $u, "size": $s, "type": $t}]' tmp.json > tmp2.json
             mv tmp2.json tmp.json
 
-            # 生成各个尺寸
+            # 生成各尺寸
             for size in "${SIZES[@]}"; do
               output_file="\( icon_dir/ \){size}.png"
-              magick "\( file" -resize " \){size}x\( {size}>" -background none -gravity center -extent " \){size}x${size}" "$output_file"
+              magick convert "$file" \
+                -resize "\( {size}x \){size}>" \
+                -background none \
+                -gravity center \
+                -extent "\( {size}x \){size}" \
+                "$output_file"
 
-              size_url="https://raw.githubusercontent.com/$REPO/main/$output_file
+              size_url="https://raw.githubusercontent.com/$REPO/main/$output_file"
+
+              jq --arg n "$name" --arg u "\( size_url" --arg s " \){size}x${size}" --arg t "png" \
+                '. += [{"name": $n, "url": $u, "size": $s, "
