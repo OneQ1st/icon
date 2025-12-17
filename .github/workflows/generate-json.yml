@@ -1,4 +1,4 @@
-name: Generate icon.json
+name: Generate square.json and circle.json
 
 on:
   push:
@@ -30,18 +30,20 @@ jobs:
       - name: Install Pillow
         run: pip install pillow
 
-      - name: Generate 256x256 icons and icon.json (only 256 version)
+      - name: Generate 128px square and circle icons + JSON indexes
         run: |
           python - <<'PY'
           import os
           import json
           from datetime import datetime
-          from PIL import Image
+          from PIL import Image, ImageDraw
 
           REPO = os.getenv("GITHUB_REPOSITORY")
-          TARGET_SIZE = 256
+          TARGET_SIZE = 128
 
-          icons = []
+          square_icons = []   # 用于 square.json
+          circle_icons = []   # 用于 circle.json
+
           os.makedirs("resized", exist_ok=True)
 
           for file in os.listdir("."):
@@ -53,59 +55,97 @@ jobs:
 
               try:
                   with Image.open(file) as img:
-                    img = img.convert("RGBA")  # 支持透明
+                    img = img.convert("RGBA")
 
-                    # 缩小到不超过 256x256，保持比例
-                    img.thumbnail((TARGET_SIZE, TARGET_SIZE), Image.LANCZOS)
+                    # 1. 生成方形 128-square.png
+                    square_img = img.copy()
+                    square_img.thumbnail((TARGET_SIZE, TARGET_SIZE), Image.LANCZOS)
+                    if square_img.size != (TARGET_SIZE, TARGET_SIZE):
+                        bg = Image.new("RGBA", (TARGET_SIZE, TARGET_SIZE), (0, 0, 0, 0))
+                        offset = ((TARGET_SIZE - square_img.width) // 2, (TARGET_SIZE - square_img.height) // 2)
+                        bg.paste(square_img, offset, square_img)
+                        square_img = bg
 
-                    # 如果不是正方形，居中扩展透明背景
-                    if img.size != (TARGET_SIZE, TARGET_SIZE):
-                        new_img = Image.new("RGBA", (TARGET_SIZE, TARGET_SIZE), (0, 0, 0, 0))
-                        offset = ((TARGET_SIZE - img.width) // 2, (TARGET_SIZE - img.height) // 2)
-                        new_img.paste(img, offset, img)
-                        img = new_img
-
-                    output_path = os.path.join(icon_dir, "256.png")
-                    img.save(output_path, "PNG", optimize=True)
-
-                    size_url = f"https://raw.githubusercontent.com/{REPO}/main/{output_path}"
-                    icons.append({
+                    square_path = os.path.join(icon_dir, "128-square.png")  # 改为带后缀
+                    square_img.save(square_path, "PNG", optimize=True)
+                    square_url = f"https://raw.githubusercontent.com/{REPO}/main/{square_path}"
+                    square_icons.append({
                         "name": name,
-                        "url": size_url,
-                        "size": "256x256",
-                        "type": "png"
+                        "url": square_url,
+                        "size": "128x128",
+                        "type": "png",
+                        "shape": "square"  # 可选：添加 shape 字段方便区分
+                    })
+
+                    # 2. 生成圆形 128-circle.png
+                    circle_img = img.copy()
+                    circle_img.thumbnail((TARGET_SIZE, TARGET_SIZE), Image.LANCZOS)
+                    if circle_img.size != (TARGET_SIZE, TARGET_SIZE):
+                        bg = Image.new("RGBA", (TARGET_SIZE, TARGET_SIZE), (0, 0, 0, 0))
+                        offset = ((TARGET_SIZE - circle_img.width) // 2, (TARGET_SIZE - circle_img.height) // 2)
+                        bg.paste(circle_img, offset, circle_img)
+                        circle_img = bg
+
+                    # 创建圆形遮罩
+                    mask = Image.new("L", (TARGET_SIZE, TARGET_SIZE), 0)
+                    draw = ImageDraw.Draw(mask)
+                    draw.ellipse((0, 0, TARGET_SIZE, TARGET_SIZE), fill=255)
+                    circle_output = Image.new("RGBA", (TARGET_SIZE, TARGET_SIZE), (0, 0, 0, 0))
+                    circle_output.paste(circle_img, (0, 0), mask)
+
+                    circle_path = os.path.join(icon_dir, "128-circle.png")
+                    circle_output.save(circle_path, "PNG", optimize=True)
+                    circle_url = f"https://raw.githubusercontent.com/{REPO}/main/{circle_path}"
+                    circle_icons.append({
+                        "name": name,
+                        "url": circle_url,
+                        "size": "128x128",
+                        "type": "png",
+                        "shape": "circle"
                     })
               except Exception as e:
                   print(f"Failed to process {file}: {e}")
 
-            # SVG 只索引（不生成 PNG）
+            # SVG：同时加入两个 JSON
             elif lowercase.endswith(".svg") and os.path.isfile(file):
               name = os.path.splitext(file)[0]
               url = f"https://raw.githubusercontent.com/{REPO}/main/{file}"
-              icons.append({
+              entry = {
                   "name": name,
                   "url": url,
-                  "size": "256x256",  # 统一标为 256x256 方便前端使用（实际为矢量）
+                  "size": "128x128",
                   "type": "svg"
-              })
+              }
+              square_icons.append({**entry, "shape": "square"})
+              circle_icons.append({**entry, "shape": "circle"})
 
-          # 生成 icon.json（仅包含 256 版本）
-          data = {
-              "name": "solnce 图标库",
-              "description": "仓库内所有图标的 256x256 版本索引（位图位于 resized/<name>/256.png，SVG 为原始矢量文件）",
+          # 生成 square.json
+          square_data = {
+              "name": "solnce 方形图标库",
+              "description": "仓库内所有图标的 128x128 方形版本索引（位于 resized/<name>/128-square.png）",
               "updated": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-              "total": len(icons),
-              "icons": icons
+              "total": len(square_icons),
+              "icons": square_icons
           }
+          with open("square.json", "w", encoding="utf-8") as f:
+              json.dump(square_data, f, indent=2, ensure_ascii=False)
 
-          with open("icon.json", "w", encoding="utf-8") as f:
-              json.dump(data, f, indent=2, ensure_ascii=False)
+          # 生成 circle.json
+          circle_data = {
+              "name": "solnce 圆形图标库",
+              "description": "仓库内所有图标的 128x128 圆形版本索引（位于 resized/<name>/128-circle.png）",
+              "updated": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+              "total": len(circle_icons),
+              "icons": circle_icons
+          }
+          with open("circle.json", "w", encoding="utf-8") as f:
+              json.dump(circle_data, f, indent=2, ensure_ascii=False)
 
-          print(f"Generated icon.json with {len(icons)} icons (only 256x256 or SVG)")
+          print(f"Generated square.json ({len(square_icons)} square) and circle.json ({len(circle_icons)} circle)")
           PY
 
       - name: Commit and push if changed
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: update icon.json and 256x256 icons"
-          file_pattern: icon.json resized/
+          commit_message: "chore: update 128px square/circle icons and indexes"
+          file_pattern: square.json circle.json resized/
