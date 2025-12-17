@@ -24,24 +24,18 @@ jobs:
           shopt -s nullglob
           REPO="${{ github.repository }}"
           
-          # 1. 清理并重新创建 API 目录
           rm -rf api
           mkdir -p api
-          
-          # 2. 初始化 JSON
           echo "[]" > tmp.json
           
-          # 3. 循环处理图片
           for f in *.{png,jpg,jpeg,svg,webp}; do
             if [[ "$f" == "icon.json" || "$f" == "index.html" || "$f" == "apple-touch-icon.png" ]]; then continue; fi
             
             NAME="${f%.*}"
             URL="https://raw.githubusercontent.com/$REPO/main/$f"
             
-            # 写入 JSON
             jq --arg n "$NAME" --arg u "$URL" '. += [{"name": $n, "url": $u}]' tmp.json > t.json && mv t.json tmp.json
             
-            # 创建文件夹并生成引导页
             mkdir -p "api/$NAME"
             cp "$f" "api/$NAME/apple-touch-icon.png"
             cp "$f" "api/$NAME/favicon.ico"
@@ -53,14 +47,12 @@ jobs:
   <meta charset="UTF-8">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="icon" href="favicon.ico">
-  <title>Icon API - $NAME</title>
 </head>
 <body><img src="apple-touch-icon.png"></body>
 </html>
 EOF
           done
           
-          # 4. 生成最终 icon.json
           jq -n --slurpfile i tmp.json '{name: "solnce 图标库", description: "自动同步自 GitHub 仓库", icons: $i[0]}' > icon.json
           rm tmp.json
 
@@ -68,8 +60,4 @@ EOF
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: update icons and api [skip ci]"
-          # 修正后的多行模式，确保 api 目录下所有内容被追踪
-          file_pattern: |
-            icon.json
-            index.html
-            api/
+          file_pattern: "icon.json index.html api/*"
