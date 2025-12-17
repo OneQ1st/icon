@@ -1,8 +1,8 @@
 {
   "name": "solnce 图标库",
   "description": "自动生成的图标列表",
-  "updated": "2025-12-17T12:22:56Z",
-  "total": 10,
+  "updated": "2025-12-17T12:23:32Z",
+  "total": 11,
   "icons": [
     {
       "name": "AIphaio",
@@ -27,6 +27,10 @@
     {
       "name": "linkcube",
       "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/linkcube.png"
+    },
+    {
+      "name": "lxy",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/lxy.png"
     },
     {
       "name": "nezhayun",
