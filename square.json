@@ -1,0 +1,85 @@
+{
+  "name": "solnce 方形图标库",
+  "description": "仓库内所有图标的 128x128 方形版本索引（位于 resized/<name>/128-square.png）",
+  "updated": "2025-12-17T18:33:32Z",
+  "total": 11,
+  "icons": [
+    {
+      "name": "lxy",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/lxy/128-square.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "square"
+    },
+    {
+      "name": "singbox",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/singbox/128-square.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "square"
+    },
+    {
+      "name": "wumao",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/wumao/128-square.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "square"
+    },
+    {
+      "name": "FacMata",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/FacMata/128-square.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "square"
+    },
+    {
+      "name": "linkcube",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/linkcube/128-square.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "square"
+    },
+    {
+      "name": "ikuuu",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/ikuuu/128-square.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "square"
+    },
+    {
+      "name": "AIphaio",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/AIphaio/128-square.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "square"
+    },
+    {
+      "name": "DlerCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/DlerCloud/128-square.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "square"
+    },
+    {
+      "name": "NanoCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/NanoCloud/128-square.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "square"
+    },
+    {
+      "name": "nezhayun",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/nezhayun/128-square.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "square"
+    },
+    {
+      "name": "xyjl",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/xyjl/128-square.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "square"
+    }
+  ]
+}

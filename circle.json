@@ -1,0 +1,85 @@
+{
+  "name": "solnce 圆形图标库",
+  "description": "仓库内所有图标的 128x128 圆形版本索引（位于 resized/<name>/128-circle.png）",
+  "updated": "2025-12-17T18:33:32Z",
+  "total": 11,
+  "icons": [
+    {
+      "name": "lxy",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/lxy/128-circle.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "circle"
+    },
+    {
+      "name": "singbox",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/singbox/128-circle.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "circle"
+    },
+    {
+      "name": "wumao",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/wumao/128-circle.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "circle"
+    },
+    {
+      "name": "FacMata",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/FacMata/128-circle.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "circle"
+    },
+    {
+      "name": "linkcube",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/linkcube/128-circle.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "circle"
+    },
+    {
+      "name": "ikuuu",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/ikuuu/128-circle.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "circle"
+    },
+    {
+      "name": "AIphaio",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/AIphaio/128-circle.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "circle"
+    },
+    {
+      "name": "DlerCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/DlerCloud/128-circle.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "circle"
+    },
+    {
+      "name": "NanoCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/NanoCloud/128-circle.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "circle"
+    },
+    {
+      "name": "nezhayun",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/nezhayun/128-circle.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "circle"
+    },
+    {
+      "name": "xyjl",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/xyjl/128-circle.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "circle"
+    }
+  ]
+}
