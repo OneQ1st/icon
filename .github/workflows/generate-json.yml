@@ -19,7 +19,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 解决 exit code 127：确保安装了 ImageMagick
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -30,8 +29,8 @@ jobs:
           shopt -s nullglob
           REPO="${{ github.repository }}"
           
+          # 移除旧的 api 文件夹，直接生成到根目录
           rm -rf api
-          mkdir -p api
           echo "[]" > tmp.json
           
           for f in *.{png,jpg,jpeg,svg,webp}; do
@@ -42,21 +41,25 @@ jobs:
             
             jq --arg n "$NAME" --arg u "$RAW_URL" '. += [{"name": $n, "url": $u}]' tmp.json > t.json && mv t.json tmp.json
             
-            mkdir -p "api/$NAME"
+            # 直接生成到根目录下的域名文件夹
+            mkdir -p "$NAME"
             
-            # 使用 convert 命令压缩并调整尺寸
-            convert "$f" -resize 192x192 -strip -quality 85 "api/$NAME/apple-touch-icon.png"
+            # 压缩并生成主图标
+            convert "$f" -resize 192x192 -strip -quality 85 "$NAME/apple-touch-icon.png"
             
-            cp "api/$NAME/apple-touch-icon.png" "api/$NAME/favicon.ico"
-            cp "api/$NAME/apple-touch-icon.png" "api/$NAME/icon-192.png"
+            cp "$NAME/apple-touch-icon.png" "$NAME/favicon.ico"
+            cp "$NAME/apple-touch-icon.png" "$NAME/icon-192.png"
             
-            # 添加 icon.png 以兼容 Bitwarden
-            cp "api/$NAME/apple-touch-icon.png" "api/$NAME/icon.png"
+            # 关键：生成 icon.png，Bitwarden 主要用这个
+            cp "$NAME/apple-touch-icon.png" "$NAME/icon.png"
             
-            printf '{"name":"%s","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png"},{"src":"apple-touch-icon.png","sizes":"180x180","type":"image/png"}]}' "$NAME" > "api/$NAME/manifest.json"
+            # 可选：生成更大尺寸的 icon-512.png 等，如果你想更清晰
+            convert "$f" -resize 512x512 -strip -quality 85 "$NAME/icon-512.png"
+            
+            printf '{"name":"%s","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png"},{"src":"apple-touch-icon.png","sizes":"180x180","type":"image/png"},{"src":"icon.png","sizes":"any","type":"image/png"}]}' "$NAME" > "$NAME/manifest.json"
 
-            HTML_STR="<!DOCTYPE html><html><head><meta charset='UTF-8'><title>$NAME</title><link rel='manifest' href='manifest.json'><link rel='apple-touch-icon' sizes='180x180' href='apple-touch-icon.png'><link rel='icon' type='image/png' sizes='32x32' href='apple-touch-icon.png'><link rel='shortcut icon' href='favicon.ico'></head><body><h1>$NAME</h1><img src='apple-touch-icon.png'></body></html>"
-            printf "%s" "$HTML_STR" > "api/$NAME/index.html"
+            HTML_STR="<!DOCTYPE html><html><head><meta charset='UTF-8'><title>$NAME</title><link rel='manifest' href='manifest.json'><link rel='apple-touch-icon' sizes='180x180' href='apple-touch-icon.png'><link rel='icon' type='image/png' sizes='32x32' href='icon.png'><link rel='shortcut icon' href='favicon.ico'></head><body><h1>$NAME</h1><img src='icon.png' style='width:192px;'></body></html>"
+            printf "%s" "$HTML_STR" > "$NAME/index.html"
           done
           
           jq -n --slurpfile i tmp.json '{name: "solnce 图标库", description: "自动同步", icons: $i[0]}' > icon.json
@@ -65,6 +68,6 @@ jobs:
       - name: Commit and Push
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: auto update icons for vercel" # 删掉 [skip ci]
+          commit_message: "chore: auto update icons for vercel"
           file_pattern: "."
           add_options: "-A"
