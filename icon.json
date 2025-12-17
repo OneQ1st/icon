@@ -1,0 +1,50 @@
+{
+  "name": "图标库",
+  "description": "主目录图标自动索引",
+  "icons": [
+    {
+      "name": "AIphaio",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/AIphaio.png"
+    },
+    {
+      "name": "DlerCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/DlerCloud.png"
+    },
+    {
+      "name": "FacMata",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/FacMata.png"
+    },
+    {
+      "name": "NanoCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/NanoCloud.png"
+    },
+    {
+      "name": "ikuuu",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/ikuuu.png"
+    },
+    {
+      "name": "liangxinyun",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/liangxinyun.png"
+    },
+    {
+      "name": "linkcube",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/linkcube.png"
+    },
+    {
+      "name": "nezhayun",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/nezhayun.png"
+    },
+    {
+      "name": "singbox",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/singbox.png"
+    },
+    {
+      "name": "wumao",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/wumao.png"
+    },
+    {
+      "name": "xyjl",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/xyjl.png"
+    }
+  ]
+}
