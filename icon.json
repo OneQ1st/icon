@@ -1,52 +1,470 @@
 {
   "name": "solnce 图标库",
-  "description": "仓库内所有图标的自动索引",
-  "updated": "2025-12-17T12:30:19Z",
-  "total": 11,
+  "description": "仓库内所有图标的自动索引（多尺寸 PNG 已按图标分组存放于 resized/<name>/）",
+  "updated": "2025-12-17T17:35:22Z",
+  "total": 77,
   "icons": [
     {
-      "name": "AIphaio",
-      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/AIphaio.png"
-    },
-    {
-      "name": "DlerCloud",
-      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/DlerCloud.png"
-    },
-    {
-      "name": "FacMata",
-      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/FacMata.png"
-    },
-    {
-      "name": "NanoCloud",
-      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/NanoCloud.png"
-    },
-    {
-      "name": "ikuuu",
-      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/ikuuu.png"
-    },
-    {
-      "name": "linkcube",
-      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/linkcube.png"
+      "name": "lxy",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/lxy.png",
+      "size": "original",
+      "type": "png"
     },
     {
       "name": "lxy",
-      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/lxy.png"
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/lxy/16.png",
+      "size": "16x16",
+      "type": "png"
     },
     {
-      "name": "nezhayun",
-      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/nezhayun.png"
+      "name": "lxy",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/lxy/32.png",
+      "size": "32x32",
+      "type": "png"
+    },
+    {
+      "name": "lxy",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/lxy/64.png",
+      "size": "64x64",
+      "type": "png"
+    },
+    {
+      "name": "lxy",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/lxy/128.png",
+      "size": "128x128",
+      "type": "png"
+    },
+    {
+      "name": "lxy",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/lxy/256.png",
+      "size": "256x256",
+      "type": "png"
+    },
+    {
+      "name": "lxy",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/lxy/512.png",
+      "size": "512x512",
+      "type": "png"
     },
     {
       "name": "singbox",
-      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/singbox.png"
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/singbox.png",
+      "size": "original",
+      "type": "png"
+    },
+    {
+      "name": "singbox",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/singbox/16.png",
+      "size": "16x16",
+      "type": "png"
+    },
+    {
+      "name": "singbox",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/singbox/32.png",
+      "size": "32x32",
+      "type": "png"
+    },
+    {
+      "name": "singbox",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/singbox/64.png",
+      "size": "64x64",
+      "type": "png"
+    },
+    {
+      "name": "singbox",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/singbox/128.png",
+      "size": "128x128",
+      "type": "png"
+    },
+    {
+      "name": "singbox",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/singbox/256.png",
+      "size": "256x256",
+      "type": "png"
+    },
+    {
+      "name": "singbox",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/singbox/512.png",
+      "size": "512x512",
+      "type": "png"
     },
     {
       "name": "wumao",
-      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/wumao.png"
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/wumao.png",
+      "size": "original",
+      "type": "png"
+    },
+    {
+      "name": "wumao",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/wumao/16.png",
+      "size": "16x16",
+      "type": "png"
+    },
+    {
+      "name": "wumao",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/wumao/32.png",
+      "size": "32x32",
+      "type": "png"
+    },
+    {
+      "name": "wumao",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/wumao/64.png",
+      "size": "64x64",
+      "type": "png"
+    },
+    {
+      "name": "wumao",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/wumao/128.png",
+      "size": "128x128",
+      "type": "png"
+    },
+    {
+      "name": "wumao",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/wumao/256.png",
+      "size": "256x256",
+      "type": "png"
+    },
+    {
+      "name": "wumao",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/wumao/512.png",
+      "size": "512x512",
+      "type": "png"
+    },
+    {
+      "name": "FacMata",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/FacMata.png",
+      "size": "original",
+      "type": "png"
+    },
+    {
+      "name": "FacMata",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/FacMata/16.png",
+      "size": "16x16",
+      "type": "png"
+    },
+    {
+      "name": "FacMata",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/FacMata/32.png",
+      "size": "32x32",
+      "type": "png"
+    },
+    {
+      "name": "FacMata",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/FacMata/64.png",
+      "size": "64x64",
+      "type": "png"
+    },
+    {
+      "name": "FacMata",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/FacMata/128.png",
+      "size": "128x128",
+      "type": "png"
+    },
+    {
+      "name": "FacMata",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/FacMata/256.png",
+      "size": "256x256",
+      "type": "png"
+    },
+    {
+      "name": "FacMata",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/FacMata/512.png",
+      "size": "512x512",
+      "type": "png"
+    },
+    {
+      "name": "linkcube",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/linkcube.png",
+      "size": "original",
+      "type": "png"
+    },
+    {
+      "name": "linkcube",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/linkcube/16.png",
+      "size": "16x16",
+      "type": "png"
+    },
+    {
+      "name": "linkcube",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/linkcube/32.png",
+      "size": "32x32",
+      "type": "png"
+    },
+    {
+      "name": "linkcube",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/linkcube/64.png",
+      "size": "64x64",
+      "type": "png"
+    },
+    {
+      "name": "linkcube",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/linkcube/128.png",
+      "size": "128x128",
+      "type": "png"
+    },
+    {
+      "name": "linkcube",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/linkcube/256.png",
+      "size": "256x256",
+      "type": "png"
+    },
+    {
+      "name": "linkcube",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/linkcube/512.png",
+      "size": "512x512",
+      "type": "png"
+    },
+    {
+      "name": "ikuuu",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/ikuuu.png",
+      "size": "original",
+      "type": "png"
+    },
+    {
+      "name": "ikuuu",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/ikuuu/16.png",
+      "size": "16x16",
+      "type": "png"
+    },
+    {
+      "name": "ikuuu",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/ikuuu/32.png",
+      "size": "32x32",
+      "type": "png"
+    },
+    {
+      "name": "ikuuu",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/ikuuu/64.png",
+      "size": "64x64",
+      "type": "png"
+    },
+    {
+      "name": "ikuuu",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/ikuuu/128.png",
+      "size": "128x128",
+      "type": "png"
+    },
+    {
+      "name": "ikuuu",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/ikuuu/256.png",
+      "size": "256x256",
+      "type": "png"
+    },
+    {
+      "name": "ikuuu",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/ikuuu/512.png",
+      "size": "512x512",
+      "type": "png"
+    },
+    {
+      "name": "AIphaio",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/AIphaio.png",
+      "size": "original",
+      "type": "png"
+    },
+    {
+      "name": "AIphaio",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/AIphaio/16.png",
+      "size": "16x16",
+      "type": "png"
+    },
+    {
+      "name": "AIphaio",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/AIphaio/32.png",
+      "size": "32x32",
+      "type": "png"
+    },
+    {
+      "name": "AIphaio",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/AIphaio/64.png",
+      "size": "64x64",
+      "type": "png"
+    },
+    {
+      "name": "AIphaio",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/AIphaio/128.png",
+      "size": "128x128",
+      "type": "png"
+    },
+    {
+      "name": "AIphaio",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/AIphaio/256.png",
+      "size": "256x256",
+      "type": "png"
+    },
+    {
+      "name": "AIphaio",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/AIphaio/512.png",
+      "size": "512x512",
+      "type": "png"
+    },
+    {
+      "name": "DlerCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/DlerCloud.png",
+      "size": "original",
+      "type": "png"
+    },
+    {
+      "name": "DlerCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/DlerCloud/16.png",
+      "size": "16x16",
+      "type": "png"
+    },
+    {
+      "name": "DlerCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/DlerCloud/32.png",
+      "size": "32x32",
+      "type": "png"
+    },
+    {
+      "name": "DlerCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/DlerCloud/64.png",
+      "size": "64x64",
+      "type": "png"
+    },
+    {
+      "name": "DlerCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/DlerCloud/128.png",
+      "size": "128x128",
+      "type": "png"
+    },
+    {
+      "name": "DlerCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/DlerCloud/256.png",
+      "size": "256x256",
+      "type": "png"
+    },
+    {
+      "name": "DlerCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/DlerCloud/512.png",
+      "size": "512x512",
+      "type": "png"
+    },
+    {
+      "name": "NanoCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/NanoCloud.png",
+      "size": "original",
+      "type": "png"
+    },
+    {
+      "name": "NanoCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/NanoCloud/16.png",
+      "size": "16x16",
+      "type": "png"
+    },
+    {
+      "name": "NanoCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/NanoCloud/32.png",
+      "size": "32x32",
+      "type": "png"
+    },
+    {
+      "name": "NanoCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/NanoCloud/64.png",
+      "size": "64x64",
+      "type": "png"
+    },
+    {
+      "name": "NanoCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/NanoCloud/128.png",
+      "size": "128x128",
+      "type": "png"
+    },
+    {
+      "name": "NanoCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/NanoCloud/256.png",
+      "size": "256x256",
+      "type": "png"
+    },
+    {
+      "name": "NanoCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/NanoCloud/512.png",
+      "size": "512x512",
+      "type": "png"
+    },
+    {
+      "name": "nezhayun",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/nezhayun.png",
+      "size": "original",
+      "type": "png"
+    },
+    {
+      "name": "nezhayun",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/nezhayun/16.png",
+      "size": "16x16",
+      "type": "png"
+    },
+    {
+      "name": "nezhayun",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/nezhayun/32.png",
+      "size": "32x32",
+      "type": "png"
+    },
+    {
+      "name": "nezhayun",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/nezhayun/64.png",
+      "size": "64x64",
+      "type": "png"
+    },
+    {
+      "name": "nezhayun",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/nezhayun/128.png",
+      "size": "128x128",
+      "type": "png"
+    },
+    {
+      "name": "nezhayun",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/nezhayun/256.png",
+      "size": "256x256",
+      "type": "png"
+    },
+    {
+      "name": "nezhayun",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/nezhayun/512.png",
+      "size": "512x512",
+      "type": "png"
     },
     {
       "name": "xyjl",
-      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/xyjl.png"
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/xyjl.png",
+      "size": "original",
+      "type": "png"
+    },
+    {
+      "name": "xyjl",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/xyjl/16.png",
+      "size": "16x16",
+      "type": "png"
+    },
+    {
+      "name": "xyjl",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/xyjl/32.png",
+      "size": "32x32",
+      "type": "png"
+    },
+    {
+      "name": "xyjl",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/xyjl/64.png",
+      "size": "64x64",
+      "type": "png"
+    },
+    {
+      "name": "xyjl",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/xyjl/128.png",
+      "size": "128x128",
+      "type": "png"
+    },
+    {
+      "name": "xyjl",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/xyjl/256.png",
+      "size": "256x256",
+      "type": "png"
+    },
+    {
+      "name": "xyjl",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/xyjl/512.png",
+      "size": "512x512",
+      "type": "png"
     }
   ]
 }
