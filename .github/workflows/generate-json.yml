@@ -22,7 +22,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python (使用 Python + Pillow，避免 ImageMagick 所有坑)
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -30,7 +30,7 @@ jobs:
       - name: Install Pillow
         run: pip install pillow
 
-      - name: Generate resized icons and icon.json
+      - name: Generate 256x256 icons and icon.json (only 256 version)
         run: |
           python - <<'PY'
           import os
@@ -39,69 +39,60 @@ jobs:
           from PIL import Image
 
           REPO = os.getenv("GITHUB_REPOSITORY")
-          SIZES = [16, 32, 64, 128, 256, 512]
+          TARGET_SIZE = 256
 
           icons = []
           os.makedirs("resized", exist_ok=True)
 
-          # 处理所有支持的图像文件
           for file in os.listdir("."):
-            if file.lower().endswith((".png", ".jpg", ".jpeg", ".webp", ".gif")) and os.path.isfile(file):
+            lowercase = file.lower()
+            if lowercase.endswith((".png", ".jpg", ".jpeg", ".webp", ".gif")) and os.path.isfile(file):
               name = os.path.splitext(file)[0]
               icon_dir = os.path.join("resized", name)
               os.makedirs(icon_dir, exist_ok=True)
 
-              original_url = f"https://raw.githubusercontent.com/{REPO}/main/{file}"
-              icons.append({
-                  "name": name,
-                  "url": original_url,
-                  "size": "original",
-                  "type": file.split(".")[-1].lower()
-              })
-
-              # 打开图像
               try:
                   with Image.open(file) as img:
-                    img = img.convert("RGBA")  # 确保有 alpha 通道，支持透明
+                    img = img.convert("RGBA")  # 支持透明
 
-                    for size in SIZES:
-                      resized = img.resize((size, size), Image.LANCZOS)
+                    # 缩小到不超过 256x256，保持比例
+                    img.thumbnail((TARGET_SIZE, TARGET_SIZE), Image.LANCZOS)
 
-                      # 如果不是正方形，居中扩展透明背景
-                      if resized.size != (size, size):
-                          new_img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-                          offset = ((size - resized.width) // 2, (size - resized.height) // 2)
-                          new_img.paste(resized, offset, resized if resized.mode == "RGBA" else None)
-                          resized = new_img
+                    # 如果不是正方形，居中扩展透明背景
+                    if img.size != (TARGET_SIZE, TARGET_SIZE):
+                        new_img = Image.new("RGBA", (TARGET_SIZE, TARGET_SIZE), (0, 0, 0, 0))
+                        offset = ((TARGET_SIZE - img.width) // 2, (TARGET_SIZE - img.height) // 2)
+                        new_img.paste(img, offset, img)
+                        img = new_img
 
-                      output_path = os.path.join(icon_dir, f"{size}.png")
-                      resized.save(output_path, "PNG", optimize=True)
+                    output_path = os.path.join(icon_dir, "256.png")
+                    img.save(output_path, "PNG", optimize=True)
 
-                      size_url = f"https://raw.githubusercontent.com/{REPO}/main/{output_path}"
-                      icons.append({
-                          "name": name,
-                          "url": size_url,
-                          "size": f"{size}x{size}",
-                          "type": "png"
-                      })
+                    size_url = f"https://raw.githubusercontent.com/{REPO}/main/{output_path}"
+                    icons.append({
+                        "name": name,
+                        "url": size_url,
+                        "size": "256x256",
+                        "type": "png"
+                    })
               except Exception as e:
                   print(f"Failed to process {file}: {e}")
 
-            # 处理 SVG（只添加原始，不 resize）
-            elif file.lower().endswith(".svg") and os.path.isfile(file):
+            # SVG 只索引（不生成 PNG）
+            elif lowercase.endswith(".svg") and os.path.isfile(file):
               name = os.path.splitext(file)[0]
               url = f"https://raw.githubusercontent.com/{REPO}/main/{file}"
               icons.append({
                   "name": name,
                   "url": url,
-                  "size": "vector",
+                  "size": "256x256",  # 统一标为 256x256 方便前端使用（实际为矢量）
                   "type": "svg"
               })
 
-          # 生成 icon.json
+          # 生成 icon.json（仅包含 256 版本）
           data = {
               "name": "solnce 图标库",
-              "description": "仓库内所有图标的自动索引（多尺寸 PNG 已按图标分组存放于 resized/<name>/）",
+              "description": "仓库内所有图标的 256x256 版本索引（位图位于 resized/<name>/256.png，SVG 为原始矢量文件）",
               "updated": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
               "total": len(icons),
               "icons": icons
@@ -110,11 +101,11 @@ jobs:
           with open("icon.json", "w", encoding="utf-8") as f:
               json.dump(data, f, indent=2, ensure_ascii=False)
 
-          print(f"Generated icon.json with {len(icons)} entries")
+          print(f"Generated icon.json with {len(icons)} icons (only 256x256 or SVG)")
           PY
 
       - name: Commit and push if changed
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: update icon.json and resized icons"
+          commit_message: "chore: update icon.json and 256x256 icons"
           file_pattern: icon.json resized/
