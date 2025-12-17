@@ -3,12 +3,12 @@ name: Generate icon.json
 on:
   push:
     paths:
-      - '*'           # 监控根目录文件
-      - '!.*'         # 排除隐藏文件
-      - '!.github/**' # 排除工作流自身
+      - '*'
+      - '!.*'
+      - '!.github/**'
     branches:
       - main
-  workflow_dispatch:  # 支持手动运行
+  workflow_dispatch:
 
 jobs:
   generate-json:
@@ -22,24 +22,35 @@ jobs:
 
       - name: Generate icon.json
         run: |
+          # 确保在没有匹配文件时不报错
+          shopt -s nullglob
+          
           REPO_FULL_NAME="${{ github.repository }}"
           BRANCH="main"
           
-          # 直接使用 jq 扫描当前目录并构建最终的 icon.json
-          # 过滤逻辑：是文件、后缀匹配、不是 icon.json 本身
-          ls | jq -Rs '
-            split("\n") 
-            | map(select(test("\\.(png|jpg|svg)$") and . != "icon.json")) 
-            | map({
-                name: . | sub("\\.[^.]+$"; ""), 
-                url: "https://raw.githubusercontent.com/'$REPO_FULL_NAME'/'$BRANCH'/" + .
-              })
-            | {
-                name: "图标库",
-                description: "主目录图标自动索引",
-                icons: .
-              }
-          ' > icon.json
+          # 1. 初始化一个临时的 JSON 数组文件
+          echo "[]" > tmp_icons.json
+
+          # 2. 遍历根目录下常见的图片格式
+          for file in *.{png,jpg,jpeg,svg,webp}; do
+            # 排除生成的 icon.json 本身（以防它被命名为图片格式）
+            if [[ "$file" == "icon.json" ]]; then continue; fi
+            
+            FILENAME="$file"
+            NAME="${file%.*}" # 去除后缀
+            URL="https://raw.githubusercontent.com/${REPO_FULL_NAME}/${BRANCH}/${FILENAME}"
+            
+            # 使用 jq 将新对象安全地追加到数组
+            jq --arg n "$NAME" --arg u "$URL" '. += [{"name": $n, "url": $u}]' tmp_icons.json > new_tmp.json && mv new_tmp.json tmp_icons.json
+          done
+
+          # 3. 封装最终结构
+          jq -n --slurpfile icons tmp_icons.json \
+            '{name: "图标库", description: "主目录图标自动索引", icons: $icons[0]}' \
+            > icon.json
+          
+          # 清理临时文件
+          rm tmp_icons.json
 
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v5
