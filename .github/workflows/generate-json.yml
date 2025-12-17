@@ -24,55 +24,45 @@ jobs:
           shopt -s nullglob
           REPO="${{ github.repository }}"
           
-          # 1. 重置目录
+          # 1. 彻底清理旧目录
           rm -rf api
           mkdir -p api
           echo "[]" > tmp.json
           
-          # 2. 遍历处理
+          # 2. 遍历处理图片
           for f in *.{png,jpg,jpeg,svg,webp}; do
             if [[ "$f" == "icon.json" || "$f" == "index.html" || "$f" == "apple-touch-icon.png" ]]; then continue; fi
             
             NAME="${f%.*}"
             RAW_URL="https://raw.githubusercontent.com/$REPO/main/$f"
             
-            # JSON 数据
+            # 写入 JSON 数据
             jq --arg n "$NAME" --arg u "$RAW_URL" '. += [{"name": $n, "url": $u}]' tmp.json > t.json && mv t.json tmp.json
             
-            # 创建目录
+            # 创建文件夹
             mkdir -p "api/$NAME"
+            
+            # 复制各版本图标（统一使用 PNG）
             cp "$f" "api/$NAME/apple-touch-icon.png"
             cp "$f" "api/$NAME/favicon.ico"
-            # 额外复制一份给 Android/Chrome 识别
             cp "$f" "api/$NAME/icon-192.png"
             
-            # 【核心 1】生成 manifest.json (Bitwarden 极喜欢这个文件)
-            cat <<EOF > "api/$NAME/manifest.json"
-          {
-            "name": "$NAME",
-            "icons": [
-              { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-              { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
-            ]
-          }
-          EOF
+            # 【核心 1】使用 printf 强制生成 manifest.json (避开 cat EOF 缩进坑)
+            printf '{"name":"%s","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png"},{"src":"apple-touch-icon.png","sizes":"180x180","type":"image/png"}]}' "$NAME" > "api/$NAME/manifest.json"
 
-            # 【核心 2】生成包含完整 Meta 信息的 index.html
-            # 使用 printf 避免 YAML 语法报错，单引号包裹 HTML 字符串
-            HTML_STR="<!DOCTYPE html><html><head><meta charset='UTF-8'><title>$NAME</title><link rel='manifest' href='manifest.json'><link rel='apple-touch-icon' sizes='180x180' href='./apple-touch-icon.png'><link rel='icon' type='image/png' sizes='32x32' href='./apple-touch-icon.png'><link rel='shortcut icon' href='./favicon.ico'></head><body><h1>$NAME</h1><img src='./apple-touch-icon.png'></body></html>"
-            
-            printf "%s" "$HTML_CONTENT" > "api/$NAME/index.html"
-            # 这里的变量名修正为 HTML_STR
+            # 【核心 2】生成标准的 HTML Meta 引导页
+            HTML_STR="<!DOCTYPE html><html><head><meta charset='UTF-8'><title>$NAME</title><link rel='manifest' href='manifest.json'><link rel='apple-touch-icon' sizes='180x180' href='apple-touch-icon.png'><link rel='icon' type='image/png' sizes='32x32' href='apple-touch-icon.png'><link rel='shortcut icon' href='favicon.ico'></head><body><h1>$NAME</h1><img src='apple-touch-icon.png'></body></html>"
             printf "%s" "$HTML_STR" > "api/$NAME/index.html"
           done
           
-          # 3. 封装 JSON
+          # 3. 最终封装 icon.json
           jq -n --slurpfile i tmp.json '{name: "solnce 图标库", description: "自动同步", icons: $i[0]}' > icon.json
           rm tmp.json
 
       - name: Commit and Push
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: update api with manifest and full meta tags [skip ci]"
+          commit_message: "chore: update api with manifest and index.html [skip ci]"
+          # 关键：确保追踪整个 api 目录
           file_pattern: "."
           add_options: "-A"
