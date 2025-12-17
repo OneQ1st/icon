@@ -1,8 +1,8 @@
 {
   "name": "solnce 图标库",
   "description": "自动生成的图标列表",
-  "updated": "2025-12-17T12:14:24Z",
-  "total": 11,
+  "updated": "2025-12-17T12:22:56Z",
+  "total": 10,
   "icons": [
     {
       "name": "AIphaio",
@@ -39,10 +39,6 @@
     {
       "name": "wumao",
       "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/wumao.png"
-    },
-    {
-      "name": "xn--9kqz23b19z.com",
-      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/xn--9kqz23b19z.com.png"
     },
     {
       "name": "xyjl",
