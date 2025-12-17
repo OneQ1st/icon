@@ -1,0 +1,52 @@
+{
+  "name": "solnce 图标库",
+  "description": "仓库内所有图标的自动索引",
+  "updated": "2025-12-17T12:30:19Z",
+  "total": 11,
+  "icons": [
+    {
+      "name": "AIphaio",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/AIphaio.png"
+    },
+    {
+      "name": "DlerCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/DlerCloud.png"
+    },
+    {
+      "name": "FacMata",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/FacMata.png"
+    },
+    {
+      "name": "NanoCloud",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/NanoCloud.png"
+    },
+    {
+      "name": "ikuuu",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/ikuuu.png"
+    },
+    {
+      "name": "linkcube",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/linkcube.png"
+    },
+    {
+      "name": "lxy",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/lxy.png"
+    },
+    {
+      "name": "nezhayun",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/nezhayun.png"
+    },
+    {
+      "name": "singbox",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/singbox.png"
+    },
+    {
+      "name": "wumao",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/wumao.png"
+    },
+    {
+      "name": "xyjl",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/xyjl.png"
+    }
+  ]
+}
