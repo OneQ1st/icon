@@ -34,23 +34,16 @@ jobs:
             NAME="${f%.*}"
             URL="https://raw.githubusercontent.com/$REPO/main/$f"
             
+            # 写入 JSON
             jq --arg n "$NAME" --arg u "$URL" '. += [{"name": $n, "url": $u}]' tmp.json > t.json && mv t.json tmp.json
             
+            # 创建 API 目录并复制图标
             mkdir -p "api/$NAME"
             cp "$f" "api/$NAME/apple-touch-icon.png"
             cp "$f" "api/$NAME/favicon.ico"
             
-            cat <<EOF > "api/$NAME/index.html"
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="icon" href="favicon.ico">
-</head>
-<body><img src="apple-touch-icon.png"></body>
-</html>
-EOF
+            # 使用 printf 代替 cat <<EOF，避免 YAML 缩进错误
+            printf '<!DOCTYPE html><html><head><meta charset="UTF-8"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="favicon.ico"></head><body><img src="apple-touch-icon.png"></body></html>' > "api/$NAME/index.html"
           done
           
           jq -n --slurpfile i tmp.json '{name: "solnce 图标库", description: "自动同步自 GitHub 仓库", icons: $i[0]}' > icon.json
@@ -60,4 +53,4 @@ EOF
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: update icons and api [skip ci]"
-          file_pattern: "icon.json index.html api/*"
+          file_pattern: "icon.json index.html api/"
