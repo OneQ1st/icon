@@ -33,20 +33,18 @@ jobs:
           
           # 3. 开始处理图片
           for f in *.{png,jpg,jpeg,svg,webp}; do
-            # 跳过系统文件
-            if [[ "$f" == "icon.json" || "$f" == "apple-touch-icon.png" ]]; then continue; fi
+            if [[ "$f" == "icon.json" || "$f" == "index.html" ]]; then continue; fi
             
             NAME="${f%.*}"
-            URL="https://raw.githubusercontent.com/$REPO/main/$f"
-            
-            # A. 写入 JSON 数据
-            jq --arg n "$NAME" --arg u "$URL" '. += [{"name": $n, "url": $u}]' tmp.json > t.json && mv t.json tmp.json
-            
-            # B. 为 Bitwarden 创建 API 映射路径
-            # 即使文件名没有 .com，Bitwarden 也会尝试访问文件夹根目录
+            # 确保创建的是干净的目录
             mkdir -p "api/$NAME"
+            
+            # 同时提供多种抓取工具偏好的命名
             cp "$f" "api/$NAME/apple-touch-icon.png"
             cp "$f" "api/$NAME/favicon.ico"
+            
+            # 关键：在每个文件夹下放一个简单的 index.html，有些爬虫没它不抓
+            echo "<link rel='apple-touch-icon' href='apple-touch-icon.png'><img src='apple-touch-icon.png'>" > "api/$NAME/index.html"
           done
           
           # 4. 生成最终 icon.json
