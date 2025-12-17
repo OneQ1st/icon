@@ -22,26 +22,37 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install dependencies (ImageMagick + jq)
+      - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y imagemagick jq
 
+      - name: Relax ImageMagick security policy
+        run: |
+          # 解除常见限制（特别是 PDF、EPHEMERAL、CODERS 等导致的资源限制）
+          sudo sed -i 's/<policy domain="resource" name="memory" value=".*"/<policy domain="resource" name="memory" value="2GiB"\/>/' /etc/ImageMagick-6/policy.xml
+          sudo sed -i 's/<policy domain="resource" name="map" value=".*"/<policy domain="resource" name="map" value="2GiB"\/>/' /etc/ImageMagick-6/policy.xml
+          sudo sed -i 's/<policy domain="resource" name="disk" value=".*"/<policy domain="resource" name="disk" value="8GiB"\/>/' /etc/ImageMagick-6/policy.xml
+          sudo sed -i 's/<policy domain="resource" name="width" value=".*"/<policy domain="resource" name="width" value="64KP"\/>/' /etc/ImageMagick-6/policy.xml
+          sudo sed -i 's/<policy domain="resource" name="height" value=".*"/<policy domain="resource" name="height" value="64KP"\/>/' /etc/ImageMagick-6/policy.xml
+          # 允许读取常见格式
+          sudo sed -i '/<policy domain="coder" rights="none" pattern="PDF" \/>/d' /etc/ImageMagick-6/policy.xml || true
+          sudo sed -i '/<policy domain="coder" rights="none" pattern="WEBP" \/>/d' /etc/ImageMagick-6/policy.xml || true
+
       - name: Generate resized PNGs and icon.json
         shell: bash
         run: |
-          set -euo pipefail  # 安全模式，推荐加上
+          set -euo pipefail
 
           REPO="${{ github.repository }}"
           mkdir -p resized
           echo "[]" > tmp.json
 
-          # 要生成的尺寸
           SIZES=(16 32 64 128 256 512)
 
           shopt -s nullglob
 
-          # 处理位图（支持 resize）
+          # 处理位图
           for file in *.{png,jpg,jpeg,webp,gif}; do
             [[ -f "$file" ]] || continue
             [[ "$file" == "icon.json" ]] && continue
@@ -52,22 +63,57 @@ jobs:
 
             original_url="https://raw.githubusercontent.com/$REPO/main/$file"
 
-            # 添加原始文件
+            # 添加原始
             jq --arg n "$name" --arg u "\( original_url" --arg s "original" --arg t " \){file##*.}" \
-              '. += [{"name": $n, "url": $u, "size": $s, "type": $t}]' tmp.json > tmp2.json
-            mv tmp2.json tmp.json
+              '. += [{"name": $n, "url": $u, "size": $s, "type": $t}]' tmp.json > tmp2.json && mv tmp2.json tmp.json
 
-            # 生成各尺寸
+            # 生成各尺寸（添加 -define png:compression-level=9 提高兼容性）
             for size in "${SIZES[@]}"; do
               output_file="\( icon_dir/ \){size}.png"
+              echo "Resizing $file to \( {size}x \){size} -> $output_file"
               magick convert "$file" \
                 -resize "\( {size}x \){size}>" \
                 -background none \
                 -gravity center \
                 -extent "\( {size}x \){size}" \
+                -define png:compression-level=9 \
                 "$output_file"
 
               size_url="https://raw.githubusercontent.com/$REPO/main/$output_file"
 
               jq --arg n "$name" --arg u "\( size_url" --arg s " \){size}x${size}" --arg t "png" \
-                '. += [{"name": $n, "url": $u, "size": $s, "
+                '. += [{"name": $n, "url": $u, "size": $s, "type": $t}]' tmp.json > tmp2.json && mv tmp2.json tmp.json
+            done
+          done
+
+          # 处理 SVG
+          for file in *.svg; do
+            [[ -f "$file" ]] || continue
+            [[ "$file" == "icon.json" ]] && continue
+
+            name="${file%.*}"
+            url="https://raw.githubusercontent.com/$REPO/main/$file"
+
+            jq --arg n "$name" --arg u "$url" --arg s "vector" --arg t "svg" \
+              '. += [{"name": $n, "url": $u, "size": $s, "type": $t}]' tmp.json > tmp2.json && mv tmp2.json tmp.json
+          done
+
+          # 生成最终 icon.json
+          jq -n \
+            --arg updated "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
+            --slurpfile items tmp.json \
+            '{
+              name: "solnce 图标库",
+              description: "仓库内所有图标的自动索引（多尺寸 PNG 已按图标分组存放于 resized/<name>/）",
+              updated: $updated,
+              total: ($items[0] | length),
+              icons: $items[0]
+            }' > icon.json
+
+          rm -f tmp.json tmp2.json
+
+      - name: Commit and push if changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update icon.json and resized icons"
+          file_pattern: icon.json resized/
