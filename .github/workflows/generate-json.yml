@@ -23,41 +23,38 @@ jobs:
         run: |
           shopt -s nullglob
           
-          # 1. 彻底重建 api 目录
+          # 1. 重建目录
           rm -rf api
           mkdir -p api
           echo "[]" > tmp.json
           
-          # 2. 遍历图片
+          # 2. 遍历处理图片
           for f in *.{png,jpg,jpeg,svg,webp}; do
             if [[ "$f" == "icon.json" || "$f" == "index.html" || "$f" == "apple-touch-icon.png" ]]; then continue; fi
             
             NAME="${f%.*}"
+            REPO_URL="https://raw.githubusercontent.com/${{ github.repository }}/main/$f"
             
-            # 写入 JSON 逻辑
-            URL="https://raw.githubusercontent.com/${{ github.repository }}/main/$f"
-            jq --arg n "$NAME" --arg u "$URL" '. += [{"name": $n, "url": $u}]' tmp.json > t.json && mv t.json tmp.json
+            # 生成 JSON
+            jq --arg n "$NAME" --arg u "$REPO_URL" '. += [{"name": $n, "url": $u}]' tmp.json > t.json && mv t.json tmp.json
             
-            # 创建子目录
+            # 创建子目录并复制文件
             mkdir -p "api/$NAME"
-            
-            # 复制图标
             cp "$f" "api/$NAME/apple-touch-icon.png"
             cp "$f" "api/$NAME/favicon.ico"
             
-            # 写入 HTML (强制刷新写入)
-            echo "<!DOCTYPE html><html><head><meta charset='UTF-8'><link rel='apple-touch-icon' href='apple-touch-icon.png'></head><body><img src='apple-touch-icon.png'></body></html>" > "api/$NAME/index.html"
+            # 使用 Base64 写入 HTML，完全避开 YAML 的符号冲突
+            # 内容为：<!DOCTYPE html><html><head><link rel="apple-touch-icon" href="apple-touch-icon.png"></head></html>
+            echo "PCFET0NUWVBFIGh0bWw+PGh0bWw+PGhlYWQ+PGxpbmsgcmVsPSJhcHBsZS10b3VjaC1pY29uIiBocmVmPSJhcHBsZS10b3VjaC1pY29uLnBuZyI+PC9oZWFkPjwvaHRtbD4=" | base64 -d > "api/$NAME/index.html"
           done
           
-          # 生成最终 JSON
+          # 3. 封装最终 JSON
           jq -n --slurpfile i tmp.json '{name: "solnce 图标库", description: "自动同步", icons: $i[0]}' > icon.json
           rm tmp.json
 
       - name: Commit and Push
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: auto sync icons and api [skip ci]"
-          # 留空 file_pattern 表示提交仓库中所有被修改和新增的文件
+          commit_message: "chore: auto sync api with index.html [skip ci]"
           file_pattern: "."
-          # 强制添加，即使文件之前不在追踪范围内
           add_options: "-A"
