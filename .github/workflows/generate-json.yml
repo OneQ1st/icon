@@ -1,16 +1,14 @@
-
-name: Generate JSON for icon.json
+name: Generate icon.json
 
 on:
   push:
-    # 仅当根目录下的文件发生变化时触发
     paths:
-      - '*'          # 匹配根目录下的所有文件
-      - '!.*'        # 排除根目录下的隐藏文件（如 .gitignore）
-      - '!.github/**' # 排除工作流文件自身的改动
+      - '*'           # 监控根目录文件
+      - '!.*'         # 排除隐藏文件
+      - '!.github/**' # 排除工作流自身
     branches:
       - main
-  workflow_dispatch:
+  workflow_dispatch:  # 支持手动运行
 
 jobs:
   generate-json:
@@ -22,35 +20,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Generate icon JSON
-        id: generate-icon
+      - name: Generate icon.json
         run: |
           REPO_FULL_NAME="${{ github.repository }}"
           BRANCH="main"
           
-          # 初始化 icons 数组
-          echo "[]" > icons.json
-
-          # 只扫描根目录 (./)
-          # 过滤条件：只要图片文件 (png, jpg, svg)，排除 combined.json 本身
-          for file in *; do
-            if [[ -f "$file" && "$file" != "icon.json" && ("$file" == *.png || "$file" == *.jpg || "$file" == *.svg) ]]; then
-              FILENAME=$(basename "$file")
-              NAME="${FILENAME%.*}"
-              # 构造根目录文件的 URL
-              URL="https://raw.githubusercontent.com/${REPO_FULL_NAME}/${BRANCH}/${FILENAME}"
-              
-              jq --arg name "$NAME" --arg url "$URL" '. += [{"name": $name, "url": $url}]' icons.json > tmp.json && mv tmp.json icons.json
-            fi
-          done
-
-          # 封装成最终格式
-          jq -n --slurpfile icons icons.json \
-            '{name: "图标库", description: "根目录图标索引", icons: $icons[0]}' \
-            > icon.json
+          # 直接使用 jq 扫描当前目录并构建最终的 icon.json
+          # 过滤逻辑：是文件、后缀匹配、不是 icon.json 本身
+          ls | jq -Rs '
+            split("\n") 
+            | map(select(test("\\.(png|jpg|svg)$") and . != "icon.json")) 
+            | map({
+                name: . | sub("\\.[^.]+$"; ""), 
+                url: "https://raw.githubusercontent.com/'$REPO_FULL_NAME'/'$BRANCH'/" + .
+              })
+            | {
+                name: "图标库",
+                description: "主目录图标自动索引",
+                icons: .
+              }
+          ' > icon.json
 
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: update icon.json (root directory) [skip ci]"
+          commit_message: "chore: update icon.json [skip ci]"
           file_pattern: icon.json
