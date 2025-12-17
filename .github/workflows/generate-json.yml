@@ -62,6 +62,6 @@ jobs:
       - name: Commit and Push
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: optimized icons with magick [skip ci]"
+          commit_message: "chore: auto update icons for vercel" # 删掉 [skip ci]
           file_pattern: "."
           add_options: "-A"
