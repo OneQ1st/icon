@@ -3,53 +3,58 @@ name: Generate icon.json
 on:
   push:
     paths:
-      - '*'
-      - '!.*'
-      - '!.github/**'
+      - '*.png'
+      - '*.jpg'
+      - '*.jpeg'
+      - '*.svg'
+      - '*.webp'
+      - '*.gif'
     branches: [main]
   workflow_dispatch:
 
 jobs:
-  build:
+  generate:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Generate icon.json
         run: |
-          shopt -s nullglob
           REPO="${{ github.repository }}"
-          
           echo "[]" > tmp.json
           
-          for f in *.{png,jpg,jpeg,svg,webp,gif}; do
-            # 跳过可能已存在的 icon.json 和其他无关文件
-            [[ "$f" == "icon.json" ]] && continue
+          shopt -s nullglob
+          for file in *.{png,jpg,jpeg,svg,webp,gif}; do
+            # 跳过 icon.json 本身
+            [[ "$file" == "icon.json" ]] && continue
             
-            NAME="${f%.*}"
-            RAW_URL="https://raw.githubusercontent.com/$REPO/main/$f"
+            name="${file%.*}"  # 去掉后缀
+            url="https://raw.githubusercontent.com/$REPO/main/$file"
             
-            jq --arg n "$NAME" --arg u "$RAW_URL" '. += [{"name": $n, "url": $u}]' tmp.json > t.json && mv t.json tmp.json
+            jq --arg n "$name" --arg u "$url" '. += [{"name": $n, "url": $u}]' tmp.json > tmp2.json
+            mv tmp2.json tmp.json
           done
           
-          # 生成最终的 icon.json（你可以根据需要调整外层结构）
-          jq -n --slurpfile icons tmp.json '{
-            name: "solnce 图标库",
-            description: "自动生成的图标列表",
-            updated: "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'",
-            total: ($icons[0] | length),
-            icons: $icons[0]
-          }' > icon.json
+          # 生成最终美观的 icon.json
+          jq -n \
+            --arg updated "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
+            --slurpfile items tmp.json \
+            '{
+              name: "solnce 图标库",
+              description: "仓库内所有图标的自动索引",
+              updated: $updated,
+              total: ($items[0] | length),
+              icons: $items[0]
+            }' > icon.json
           
           rm tmp.json
 
-      - name: Commit and Push icon.json
+      - name: Commit and push if changed
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: update icon.json"
           file_pattern: icon.json
-          add_options: "-A"
