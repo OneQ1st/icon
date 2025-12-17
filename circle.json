@@ -1,7 +1,7 @@
 {
-  "name": "solnce 圆形图标库",
-  "description": "仓库内所有图标的 128x128 圆形版本索引（位于 resized/<name>/128-circle.png）",
-  "updated": "2025-12-17T18:33:32Z",
+  "name": "solnce 128x128 圆形图标库",
+  "description": "仓库内所有图标的 128x128 圆形版本索引（位于 resized/<name>/128-circle.png，其他尺寸文件也存在但不索引）",
+  "updated": "2025-12-17T18:42:53Z",
   "total": 11,
   "icons": [
     {
