@@ -1,6 +1,6 @@
 {
   "name": "图标库",
-  "description": "主目录图标自动索引",
+  "description": "自动同步自 GitHub 仓库",
   "icons": [
     {
       "name": "AIphaio",
