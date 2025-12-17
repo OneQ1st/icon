@@ -31,7 +31,7 @@ jobs:
             URL="https://raw.githubusercontent.com/$REPO/main/$f"
             jq --arg n "$NAME" --arg u "$URL" '. += [{"name": $n, "url": $u}]' tmp.json > t.json && mv t.json tmp.json
           done
-          jq -n --slurpfile i tmp.json '{name: "solnce 图标库", description: "自动同步自 GitHub 仓库", icons: $i[0]}' > icon.json
+          jq -n --slurpfile i tmp.json '{name: "图标库", description: "自动同步自 GitHub 仓库", icons: $i[0]}' > icon.json
           rm tmp.json
 
       - name: Commit and Push
