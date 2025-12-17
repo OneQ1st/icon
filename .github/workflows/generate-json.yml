@@ -19,54 +19,49 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 解决 exit code 127：确保安装了 ImageMagick
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick
+
       - name: Build icon.json and API folders
         run: |
           shopt -s nullglob
           REPO="${{ github.repository }}"
           
-          # 1. 重置目录
           rm -rf api
           mkdir -p api
           echo "[]" > tmp.json
           
-          # 2. 循环处理并压缩图片
           for f in *.{png,jpg,jpeg,svg,webp}; do
             if [[ "$f" == "icon.json" || "$f" == "index.html" || "$f" == "apple-touch-icon.png" ]]; then continue; fi
             
             NAME="${f%.*}"
             RAW_URL="https://raw.githubusercontent.com/$REPO/main/$f"
             
-            # 更新 JSON
             jq --arg n "$NAME" --arg u "$RAW_URL" '. += [{"name": $n, "url": $u}]' tmp.json > t.json && mv t.json tmp.json
             
-            # 创建文件夹
             mkdir -p "api/$NAME"
             
-            # 【核心功能】使用 ImageMagick 压缩图标
-            # -resize 192x192: 强制调整为 Bitwarden 喜爱的尺寸
-            # -strip: 移除 GPS、拍摄时间等干扰数据，减小体积
-            # -quality 85: 保持清晰的同时大幅缩小文件大小
+            # 使用 convert 命令压缩并调整尺寸
             convert "$f" -resize 192x192 -strip -quality 85 "api/$NAME/apple-touch-icon.png"
             
-            # 复制其他入口文件
             cp "api/$NAME/apple-touch-icon.png" "api/$NAME/favicon.ico"
             cp "api/$NAME/apple-touch-icon.png" "api/$NAME/icon-192.png"
             
-            # 生成 manifest.json
             printf '{"name":"%s","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png"},{"src":"apple-touch-icon.png","sizes":"180x180","type":"image/png"}]}' "$NAME" > "api/$NAME/manifest.json"
 
-            # 生成标准的 HTML Meta 引导页
             HTML_STR="<!DOCTYPE html><html><head><meta charset='UTF-8'><title>$NAME</title><link rel='manifest' href='manifest.json'><link rel='apple-touch-icon' sizes='180x180' href='apple-touch-icon.png'><link rel='icon' type='image/png' sizes='32x32' href='apple-touch-icon.png'><link rel='shortcut icon' href='favicon.ico'></head><body><h1>$NAME</h1><img src='apple-touch-icon.png'></body></html>"
             printf "%s" "$HTML_STR" > "api/$NAME/index.html"
           done
           
-          # 3. 封装最终 JSON
           jq -n --slurpfile i tmp.json '{name: "solnce 图标库", description: "自动同步", icons: $i[0]}' > icon.json
           rm tmp.json
 
       - name: Commit and Push
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: optimized icons with compression and meta tags [skip ci]"
+          commit_message: "chore: optimized icons with magick [skip ci]"
           file_pattern: "."
           add_options: "-A"
