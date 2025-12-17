@@ -22,49 +22,99 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install dependencies (ImageMagick + jq)
+      - name: Set up Python (使用 Python + Pillow，避免 ImageMagick 所有坑)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Pillow
+        run: pip install pillow
+
+      - name: Generate resized icons and icon.json
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y imagemagick jq
+          python - <<'PY'
+          import os
+          import json
+          from datetime import datetime
+          from PIL import Image
 
-      - name: Verify commands exist
-        run: |
-          which convert || echo "convert not found"
-          which magick || echo "magick not found (normal)"
-          which jq || echo "jq not found"
-          convert -version || echo "convert failed"
-          jq --version
+          REPO = os.getenv("GITHUB_REPOSITORY")
+          SIZES = [16, 32, 64, 128, 256, 512]
 
-      - name: Relax ImageMagick policy (fix delegate/resource errors)
-        run: |
-          POLICY_FILE="/etc/ImageMagick-6/policy.xml"
-          if [ -f "$POLICY_FILE" ]; then
-            sudo sed -i 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' $POLICY_FILE
-            sudo sed -i 's/rights="none" pattern="WEBP"/rights="read|write" pattern="WEBP"/' $POLICY_FILE
-            sudo sed -i 's/rights="none" pattern="XPS"/rights="read|write" pattern="XPS"/' $POLICY_FILE
-            sudo sed -i '/<!-- <policy domain="resource" name="memory" value="256MiB"\/> -->/a <policy domain="resource" name="memory" value="2GiB"\/>' $POLICY_FILE
-            sudo sed -i '/<!-- <policy domain="resource" name="disk" value="1GiB"\/> -->/a <policy domain="resource" name="disk" value="8GiB"\/>' $POLICY_FILE
-          fi
+          icons = []
+          os.makedirs("resized", exist_ok=True)
 
-      - name: Generate resized PNGs and icon.json
-        shell: bash
-        run: |
-          set -euo pipefail
+          # 处理所有支持的图像文件
+          for file in os.listdir("."):
+            if file.lower().endswith((".png", ".jpg", ".jpeg", ".webp", ".gif")) and os.path.isfile(file):
+              name = os.path.splitext(file)[0]
+              icon_dir = os.path.join("resized", name)
+              os.makedirs(icon_dir, exist_ok=True)
 
-          REPO="${{ github.repository }}"
-          mkdir -p resized
-          echo "[]" > tmp.json
+              original_url = f"https://raw.githubusercontent.com/{REPO}/main/{file}"
+              icons.append({
+                  "name": name,
+                  "url": original_url,
+                  "size": "original",
+                  "type": file.split(".")[-1].lower()
+              })
 
-          SIZES=(16 32 64 128 256 512)
+              # 打开图像
+              try:
+                  with Image.open(file) as img:
+                    img = img.convert("RGBA")  # 确保有 alpha 通道，支持透明
 
-          shopt -s nullglob
+                    for size in SIZES:
+                      resized = img.resize((size, size), Image.LANCZOS)
 
-          # 明确使用 convert 命令（最兼容）
-          CONVERT_CMD="convert"
+                      # 如果不是正方形，居中扩展透明背景
+                      if resized.size != (size, size):
+                          new_img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+                          offset = ((size - resized.width) // 2, (size - resized.height) // 2)
+                          new_img.paste(resized, offset, resized if resized.mode == "RGBA" else None)
+                          resized = new_img
 
-          for file in *.{png,jpg,jpeg,webp,gif}; do
-            [[ -f "$file" ]] || continue
-            [[ "$file" == "icon.json" ]] && continue
+                      output_path = os.path.join(icon_dir, f"{size}.png")
+                      resized.save(output_path, "PNG", optimize=True)
 
-            name="${file%.*}"
-            icon_dir="resized/$name
+                      size_url = f"https://raw.githubusercontent.com/{REPO}/main/{output_path}"
+                      icons.append({
+                          "name": name,
+                          "url": size_url,
+                          "size": f"{size}x{size}",
+                          "type": "png"
+                      })
+              except Exception as e:
+                  print(f"Failed to process {file}: {e}")
+
+            # 处理 SVG（只添加原始，不 resize）
+            elif file.lower().endswith(".svg") and os.path.isfile(file):
+              name = os.path.splitext(file)[0]
+              url = f"https://raw.githubusercontent.com/{REPO}/main/{file}"
+              icons.append({
+                  "name": name,
+                  "url": url,
+                  "size": "vector",
+                  "type": "svg"
+              })
+
+          # 生成 icon.json
+          data = {
+              "name": "solnce 图标库",
+              "description": "仓库内所有图标的自动索引（多尺寸 PNG 已按图标分组存放于 resized/<name>/）",
+              "updated": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+              "total": len(icons),
+              "icons": icons
+          }
+
+          with open("icon.json", "w", encoding="utf-8") as f:
+              json.dump(data, f, indent=2, ensure_ascii=False)
+
+          print(f"Generated icon.json with {len(icons)} entries")
+          PY
+
+      - name: Commit and push if changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update icon.json and resized icons"
+          file_pattern: icon.json resized/
