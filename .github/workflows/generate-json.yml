@@ -1,4 +1,4 @@
-name: Generate icon.json and Gallery
+name: Generate icon.json and Bitwarden API
 
 on:
   push:
@@ -19,23 +19,43 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build icon.json
+      - name: Build icon.json and API folders
         run: |
           shopt -s nullglob
           REPO="${{ github.repository }}"
-          # 初始化数组
+          
+          # 1. 准备工作：清理旧的 api 目录并重新创建
+          rm -rf api
+          mkdir -p api
+          
+          # 2. 初始化 json 数组
           echo "[]" > tmp.json
+          
+          # 3. 开始处理图片
           for f in *.{png,jpg,jpeg,svg,webp}; do
-            if [[ "$f" == "icon.json" ]]; then continue; fi
+            # 跳过系统文件
+            if [[ "$f" == "icon.json" || "$f" == "apple-touch-icon.png" ]]; then continue; fi
+            
             NAME="${f%.*}"
             URL="https://raw.githubusercontent.com/$REPO/main/$f"
+            
+            # A. 写入 JSON 数据
             jq --arg n "$NAME" --arg u "$URL" '. += [{"name": $n, "url": $u}]' tmp.json > t.json && mv t.json tmp.json
+            
+            # B. 为 Bitwarden 创建 API 映射路径
+            # 即使文件名没有 .com，Bitwarden 也会尝试访问文件夹根目录
+            mkdir -p "api/$NAME"
+            cp "$f" "api/$NAME/apple-touch-icon.png"
+            cp "$f" "api/$NAME/favicon.ico"
           done
-          jq -n --slurpfile i tmp.json '{name: "图标库", description: "自动同步自 GitHub 仓库", icons: $i[0]}' > icon.json
+          
+          # 4. 生成最终 icon.json
+          jq -n --slurpfile i tmp.json '{name: "solnce 图标库", description: "自动同步自 GitHub 仓库", icons: $i[0]}' > icon.json
           rm tmp.json
 
       - name: Commit and Push
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: update icon assets [skip ci]"
-          file_pattern: "icon.json index.html"
+          commit_message: "chore: update icons and api folders [skip ci]"
+          # 关键：允许提交 api 目录下的所有内容
+          file_pattern: "icon.json index.html api/*"
