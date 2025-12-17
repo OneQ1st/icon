@@ -50,6 +50,9 @@ jobs:
             cp "api/$NAME/apple-touch-icon.png" "api/$NAME/favicon.ico"
             cp "api/$NAME/apple-touch-icon.png" "api/$NAME/icon-192.png"
             
+            # 添加 icon.png 以兼容 Bitwarden
+            cp "api/$NAME/apple-touch-icon.png" "api/$NAME/icon.png"
+            
             printf '{"name":"%s","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png"},{"src":"apple-touch-icon.png","sizes":"180x180","type":"image/png"}]}' "$NAME" > "api/$NAME/manifest.json"
 
             HTML_STR="<!DOCTYPE html><html><head><meta charset='UTF-8'><title>$NAME</title><link rel='manifest' href='manifest.json'><link rel='apple-touch-icon' sizes='180x180' href='apple-touch-icon.png'><link rel='icon' type='image/png' sizes='32x32' href='apple-touch-icon.png'><link rel='shortcut icon' href='favicon.ico'></head><body><h1>$NAME</h1><img src='apple-touch-icon.png'></body></html>"
