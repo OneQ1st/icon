@@ -1,4 +1,4 @@
-name: Generate icon.json
+name: Generate icon.json and Gallery
 
 on:
   push:
@@ -6,12 +6,11 @@ on:
       - '*'
       - '!.*'
       - '!.github/**'
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-  generate-json:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -20,40 +19,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Generate icon.json
+      - name: Build icon.json
         run: |
-          # 确保在没有匹配文件时不报错
           shopt -s nullglob
-          
-          REPO_FULL_NAME="${{ github.repository }}"
-          BRANCH="main"
-          
-          # 1. 初始化一个临时的 JSON 数组文件
-          echo "[]" > tmp_icons.json
-
-          # 2. 遍历根目录下常见的图片格式
-          for file in *.{png,jpg,jpeg,svg,webp}; do
-            # 排除生成的 icon.json 本身（以防它被命名为图片格式）
-            if [[ "$file" == "icon.json" ]]; then continue; fi
-            
-            FILENAME="$file"
-            NAME="${file%.*}" # 去除后缀
-            URL="https://raw.githubusercontent.com/${REPO_FULL_NAME}/${BRANCH}/${FILENAME}"
-            
-            # 使用 jq 将新对象安全地追加到数组
-            jq --arg n "$NAME" --arg u "$URL" '. += [{"name": $n, "url": $u}]' tmp_icons.json > new_tmp.json && mv new_tmp.json tmp_icons.json
+          REPO="${{ github.repository }}"
+          # 初始化数组
+          echo "[]" > tmp.json
+          for f in *.{png,jpg,jpeg,svg,webp}; do
+            if [[ "$f" == "icon.json" ]]; then continue; fi
+            NAME="${f%.*}"
+            URL="https://raw.githubusercontent.com/$REPO/main/$f"
+            jq --arg n "$NAME" --arg u "$URL" '. += [{"name": $n, "url": $u}]' tmp.json > t.json && mv t.json tmp.json
           done
+          jq -n --slurpfile i tmp.json '{name: "solnce 图标库", description: "自动同步自 GitHub 仓库", icons: $i[0]}' > icon.json
+          rm tmp.json
 
-          # 3. 封装最终结构
-          jq -n --slurpfile icons tmp_icons.json \
-            '{name: "图标库", description: "主目录图标自动索引", icons: $icons[0]}' \
-            > icon.json
-          
-          # 清理临时文件
-          rm tmp_icons.json
-
-      - name: Commit and push changes
+      - name: Commit and Push
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: update icon.json [skip ci]"
-          file_pattern: icon.json
+          commit_message: "chore: update icon assets [skip ci]"
+          file_pattern: "icon.json index.html"
