@@ -1,6 +1,6 @@
 ```shell
-https://raw.githubusercontent.com/OneQ1st/icon/main/icon.json
+https://raw.githubusercontent.com/OneQ1st/icon/refs/heads/main/square.json
 ```
 ```shell
-https://oneq1st.github.io/icon/api/文件名/index.html
+https://raw.githubusercontent.com/OneQ1st/icon/refs/heads/main/circle.json
 ```
