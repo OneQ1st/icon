@@ -3,12 +3,12 @@ name: Generate square.json and circle.json (only 128 in index)
 on:
   push:
     paths:
-      - '*.png'
-      - '*.jpg'
-      - '*.jpeg'
-      - '*.svg'
-      - '*.webp'
-      - '*.gif'
+      - '**.png'
+      - '**.jpg'
+      - '**.jpeg'
+      - '**.svg'
+      - '**.webp'
+      - '**.gif'
     branches: [main]
   workflow_dispatch:
 
