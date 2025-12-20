@@ -1,9 +1,16 @@
 {
   "name": "solnce 128x128 方形图标库",
   "description": "仓库内所有图标的 128x128 方形版本索引（位于 resized/<name>/128-square.png，其他尺寸文件也存在但不索引）",
-  "updated": "2025-12-19T11:40:10Z",
-  "total": 12,
+  "updated": "2025-12-20T05:51:07Z",
+  "total": 13,
   "icons": [
+    {
+      "name": "peiqian",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/peiqian/128-square.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "square"
+    },
     {
       "name": "lxy",
       "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/lxy/128-square.png",
