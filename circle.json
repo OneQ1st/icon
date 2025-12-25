@@ -1,8 +1,8 @@
 {
   "name": "solnce 128x128 圆形图标库",
   "description": "仓库内所有图标的 128x128 圆形版本索引（位于 resized/<name>/128-circle.png，其他尺寸文件也存在但不索引）",
-  "updated": "2025-12-20T05:51:07Z",
-  "total": 13,
+  "updated": "2025-12-25T18:38:13Z",
+  "total": 14,
   "icons": [
     {
       "name": "peiqian",
@@ -28,6 +28,13 @@
     {
       "name": "wumao",
       "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/wumao/128-circle.png",
+      "size": "128x128",
+      "type": "png",
+      "shape": "circle"
+    },
+    {
+      "name": "pzy",
+      "url": "https://raw.githubusercontent.com/OneQ1st/icon/main/resized/pzy/128-circle.png",
       "size": "128x128",
       "type": "png",
       "shape": "circle"
