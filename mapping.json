@@ -1,0 +1,13 @@
+{
+  "dlercloud.com": "DlerCloud.png",
+  "sing-box.com": "singbox.png",
+  "ikuuu.com": "ikuuu.png",
+  "ai pha.io": "AIphaio.png",
+  "nezhayun.com": "nezhayun.png",
+  "digitalplat.com": "DigitalPlat.png",
+  "nano cloud": "NanoCloud.png",
+  "google.com": "Google.png",
+  "github.com": "github.png",
+  "youtube.com": "YouTube.png"
+  // 继续加： "你的域名": "仓库里的文件名（不带路径，如果在 root）"
+}
